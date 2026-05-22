@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AFK Bot Logs</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell shell-wide">
+      <section class="hero hero-row">
+        <div>
+          <p class="eyebrow">Minecraft AFK bot</p>
+          <h1>Live Logs</h1>
+          <p class="subtitle">Useful for checking kicks, reconnects, and auth messages.</p>
+        </div>
+        <a class="button button-muted" href="/">Back to dashboard</a>
+      </section>
+
+      <section class="panel">
+        <div class="logs-toolbar">
+          <p class="label">Recent logs</p>
+          <button id="refreshLogs" class="button button-muted" type="button">Refresh</button>
+        </div>
+        <pre id="logsOutput" class="logs-box">Loading logs...</pre>
+      </section>
+    </main>
+
+    <script>
+      async function loadLogs() {
+        const response = await fetch("/api/logs");
+        const data = await response.json();
+        const output = document.getElementById("logsOutput");
+        output.textContent = data.logs.length ? data.logs.join("\n") : "No logs yet.";
+      }
+
+      document.getElementById("refreshLogs").addEventListener("click", loadLogs);
+      loadLogs();
+      setInterval(loadLogs, 5000);
+    </script>
+  </body>
+</html>
