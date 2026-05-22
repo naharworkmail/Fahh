@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AFK Bot Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <p class="eyebrow">Minecraft AFK bot</p>
+        <h1>AFK Bot Dashboard</h1>
+        <p class="subtitle">Keep your bot online from a hosted app, even when your PC is off.</p>
+      </section>
+
+      <section id="statusCard" class="status-card status-connecting">
+        <div class="status-badge" id="statusBadge">...</div>
+        <div>
+          <h2 id="statusLabel">Connecting</h2>
+          <p id="statusText">Waiting for first status update.</p>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="panel">
+          <p class="label">Server</p>
+          <h3 id="serverAddress">Loading...</h3>
+          <p class="meta" id="serverVersion">Version: auto</p>
+        </article>
+
+        <article class="panel">
+          <p class="label">Bot Account</p>
+          <h3 id="botName">Loading...</h3>
+          <p class="meta" id="botAuth">Auth: offline</p>
+        </article>
+
+        <article class="panel">
+          <p class="label">Uptime</p>
+          <h3 id="uptime">0s</h3>
+          <p class="meta">Time since latest successful spawn</p>
+        </article>
+
+        <article class="panel">
+          <p class="label">Coordinates</p>
+          <h3 id="coords">Waiting...</h3>
+          <p class="meta">Live in-game position</p>
+        </article>
+
+        <article class="panel">
+          <p class="label">Reconnect Attempts</p>
+          <h3 id="reconnects">0</h3>
+          <p class="meta">Retries since last good connection</p>
+        </article>
+
+        <article class="panel">
+          <p class="label">Auto Reconnect</p>
+          <h3 id="reconnectState">Enabled</h3>
+          <p class="meta" id="reconnectTimer">Retry delay: 5 minutes</p>
+        </article>
+
+        <article class="panel">
+          <p class="label">Last Error</p>
+          <h3 id="lastError">None</h3>
+          <p class="meta" id="lastDisconnect">No disconnects yet</p>
+        </article>
+      </section>
+
+      <section class="controls">
+        <button id="startButton" class="button button-good">Start bot</button>
+        <button id="stopButton" class="button button-bad">Stop bot</button>
+        <button id="toggleReconnectButton" class="button button-warn">Disable auto reconnect</button>
+        <a class="button button-muted" href="/logs.html">View logs</a>
+        <a class="button button-muted" href="/setup.html">Setup guide</a>
+      </section>
+
+      <section class="panel command-panel">
+        <div class="command-header">
+          <div>
+            <p class="label">Quick command</p>
+            <h3>Send chat or slash command</h3>
+          </div>
+          <p class="meta">Examples: `hello`, `/spawn`, `/register ...`</p>
+        </div>
+
+        <form id="commandForm" class="command-form">
+          <input id="commandInput" type="text" placeholder="Type a Minecraft command or chat message" />
+          <button class="button button-good" type="submit">Send</button>
+        </form>
+        <p id="commandMessage" class="meta"></p>
+      </section>
+
+      <section class="panel settings-panel">
+        <div class="command-header">
+          <div>
+            <p class="label">Connection settings</p>
+            <h3>Edit bot details from the dashboard</h3>
+          </div>
+          <p class="meta">Save here to change IP, port, username, auth, and auto login.</p>
+        </div>
+
+        <form id="settingsForm" class="settings-form">
+          <input id="appNameInput" type="text" placeholder="App name" />
+          <input id="hostInput" type="text" placeholder="Server IP or host" />
+          <input id="portInput" type="number" placeholder="Server port" />
+          <input id="usernameInput" type="text" placeholder="Bot username" />
+          <input id="passwordInput" type="text" placeholder="Bot password if needed" />
+          <input id="versionInput" type="text" placeholder="Minecraft version or leave blank" />
+          <select id="authInput">
+            <option value="offline">offline</option>
+            <option value="microsoft">microsoft</option>
+            <option value="mojang">mojang</option>
+          </select>
+          <input id="autoAuthPasswordInput" type="text" placeholder="Auto /login or /register password" />
+          <label class="toggle-row">
+            <input id="autoAuthEnabledInput" type="checkbox" />
+            <span>Enable auto auth</span>
+          </label>
+          <label class="toggle-row">
+            <input id="antiAfkEnabledInput" type="checkbox" />
+            <span>Enable anti AFK movement</span>
+          </label>
+          <button class="button button-good" type="submit">Save settings</button>
+        </form>
+        <p id="settingsMessage" class="meta"></p>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
