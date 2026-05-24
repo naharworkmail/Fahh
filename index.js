@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const https = require("https");
 const express = require("express");
 const mineflayer = require("mineflayer");
 const { pathfinder } = require("mineflayer-pathfinder");
@@ -31,6 +32,7 @@ const state = {
 let bot = null;
 let reconnectTimer = null;
 let antiAfkTimer = null;
+let keepAliveTimer = null;
 
 function readSettingsFile() {
   return JSON.parse(fs.readFileSync(settingsPath, "utf8"));
@@ -370,6 +372,43 @@ function saveEditableSettings(nextSettings) {
   updateRuntimeConfig(nextSettings);
 }
 
+function pingSelf(url) {
+  if (!url) return;
+
+  try {
+    https
+      .get(`${url.replace(/\/$/, "")}/health`, (res) => {
+        addLog(`[KeepAlive] Self-ping: ${res.statusCode}`);
+        res.resume();
+      })
+      .on("error", (error) => {
+        addLog(`[KeepAlive] Ping failed: ${error.message}`);
+      });
+  } catch (error) {
+    addLog(`[KeepAlive] Ping error: ${error.message}`);
+  }
+}
+
+function startKeepAlive() {
+  const selfUrl = process.env.RENDER_EXTERNAL_URL;
+
+  if (!selfUrl) {
+    addLog("[KeepAlive] RENDER_EXTERNAL_URL not found, skipping self-ping");
+    return;
+  }
+
+  if (keepAliveTimer) {
+    clearInterval(keepAliveTimer);
+  }
+
+  addLog(`[KeepAlive] Enabled for ${selfUrl}`);
+  pingSelf(selfUrl);
+
+  keepAliveTimer = setInterval(() => {
+    pingSelf(selfUrl);
+  }, 5 * 60 * 1000);
+}
+
 app.get("/api/status", (_req, res) => {
   res.json(getStatus());
 });
@@ -508,6 +547,7 @@ app.listen(port, "0.0.0.0", () => {
   addLog(`[Server] Dashboard running on port ${port}`);
   state.desiredRunning = true;
   startBot();
+  startKeepAlive();
 });
 
 process.on("uncaughtException", (error) => {
